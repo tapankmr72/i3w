@@ -1,5 +1,5 @@
 import openpyxl
-path = "C:\\Users\\tapan\\OneDrive\\Desktop\\pythonpremi\\pure python projects\\latlongindia\\"
+path = ""
 wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
 sheet_obj = wb_obj.active
 print("========================================")
