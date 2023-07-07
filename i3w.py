@@ -1,9 +1,10 @@
+import streamlit as st
 import time
 from datetime import datetime
 import json
 import urllib.request
 import requests
-path="C:\\Users\\tapan\\OneDrive\\Desktop\\pythonpremi\\pure python projects\\latlongindia\\"
+path=""
 polltime=2
 pollgap=2
 u2=""
@@ -22,7 +23,7 @@ filedownload="https://api.telegram.org/file/bot"+token+"/"
 fileurl="https://api.telegram.org/bot"+token+"/getfile"
 healthduration=30
 #in minutes
-healthmessage="This is health message of Basic Telebot. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
+healthmessage="This is health message of I3W. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
 healthtime = int(time.time())
 
 while looper==0:
