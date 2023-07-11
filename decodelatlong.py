@@ -216,7 +216,7 @@ if a1a!="" and a1b!="" and b1!="" and b2!="" and b3!="" and b4!=""  and str1a!="
     message = "https://www.google.com/maps/search/?api=1&query=" + lat + "," + long
 else:
   message="?"
-  text="  
+  text=""  
 
 
 
