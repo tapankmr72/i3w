@@ -13,7 +13,7 @@ while n == 0:
 
         break
 
-    if cell_obj2a.value.upper() == text.upper() :
+    if cell_obj2a.value.upper().strip() == text.upper().strip() :
         text=cell_obj1a.value
         strLen = len(text)
         range_obj = range(strLen)
