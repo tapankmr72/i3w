@@ -6,6 +6,11 @@ import urllib.request
 import requests
 import openpyxl
 path=""
+wb_obj1 = openpyxl.load_workbook(path + "mapped.xlsx")
+sheet_obja = wb_obj1.active
+wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
+sheet_obj = wb_obj.active
+
 polltime=2
 pollgap=2
 u2=""
