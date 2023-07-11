@@ -1,9 +1,4 @@
-import openpyxl
-path = ""
-wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
-sheet_obj = wb_obj.active
-wb_obj1 = openpyxl.load_workbook(path + "mapped.xlsx")
-sheet_obja = wb_obj1.active
+
 n = 0
 srow = 2
 while n == 0:
@@ -13,7 +8,7 @@ while n == 0:
 
         break
 
-    if cell_obj2a.value.strip().lower() == text.strip().lower() :
+    if cell_obj2a.value.upper().strip() == text.upper().strip() :
         text=cell_obj1a.value
         strLen = len(text)
         range_obj = range(strLen)
@@ -216,7 +211,6 @@ if a1a!="" and a1b!="" and b1!="" and b2!="" and b3!="" and b4!=""  and str1a!="
     message = "https://www.google.com/maps/search/?api=1&query=" + lat + "," + long
 else:
   message="?"
-  text=""  
 
 
 
