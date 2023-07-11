@@ -2,8 +2,35 @@ import openpyxl
 path = ""
 wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
 sheet_obj = wb_obj.active
+wb_obj1 = openpyxl.load_workbook(path + "mapped.xlsx")
+sheet_obja = wb_obj1.active
+n = 0
+srow = 2
+while n == 0:
+    cell_obj1a = sheet_obja.cell(row=srow, column=1)
+    cell_obj2a = sheet_obja.cell(row=srow, column=2)
+    if cell_obj1a.value ==None or cell_obj1a.value =="":
+
+        break
+
+    if cell_obj2a.value.upper() == text.upper() :
+        text=cell_obj1a.value
+        strLen = len(text)
+        range_obj = range(strLen)
+        character = "."
+        count = 0
+        count1 = ""
+        for index in range_obj:
+            if text[index] == character:
+                count = count + 1
+                count1 = count1 + "<" + str(index)
+        break
+
+    else:
+      srow=srow+1
 print("========================================")
 print("new file")
+print(text)
 a1a=""
 b1=""
 b3=""
