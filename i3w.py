@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 import urllib.request
 import requests
+import openpyxl
 path=""
 polltime=2
 pollgap=2
@@ -12,7 +13,7 @@ replyto="5560841599"
 looper=0
 message = ""
 updatetext1=0
-#token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
+token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
 headers = {"accept": "application/json","content-type": "application/json"}
 photourl="https://api.telegram.org/bot"+token+"/sendPhoto"
 docurl="https://api.telegram.org/bot"+token+"/sendDocument"
@@ -23,7 +24,7 @@ filedownload="https://api.telegram.org/file/bot"+token+"/"
 fileurl="https://api.telegram.org/bot"+token+"/getfile"
 healthduration=30
 #in minutes
-healthmessage="This is health message of I3W. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
+healthmessage="This is health message of Basic Telebot. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
 healthtime = int(time.time())
 
 while looper==0:
@@ -66,13 +67,20 @@ while looper==0:
            longid = tempstr.find("longitude")
            livepos = tempstr.find("live_period")
            latid = tempstr[latid + 11:longid-2]
-
+           latid = latid.strip()
            latid=latid.strip(",")
-           longid = tempstr[longid + 11:longid + 22]
+           if livepos != -1:
+            longid = tempstr[longid + 11:livepos-2]
+            longid = longid.strip()
+            longid = longid.rstrip(",")
 
-           longid = longid.rstrip("}")
-           longid = longid.strip()
-           longid = longid.rstrip(",")
+           else:
+            findlastlondid=tempstr.find("}}}]}")
+            longid = tempstr[longid + 11:findlastlondid]
+
+            #longid = longid.rstrip("}")
+            longid = longid.strip()
+            longid = longid.rstrip(",")
 
        filepos1 = tempstr.rfind("file_id':")
        if filepos1 != -1:
@@ -214,13 +222,35 @@ while looper==0:
                    address="Shared location is not within India.."
 
 
-               payloadtext = {"text": address+"\n"+latid+"\n"+longid, "parse_mode": "html",
-                              "disable_web_page_preview": False,
+               payloadtext = {"text": address+"\n\n"+lat+"\n"+long, "parse_mode": "html",
+                              "disable_web_page_preview": True,
                               "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
                response = requests.post(texturl, json=payloadtext, headers=headers)
                tempstr = tempstr[datepos + 65:lendata]
                # sr=1
                break
+
+       elif messagetext[0:3].upper()=="MAP":
+           findto=messagetext.upper().find("TO")
+           mapfrom=messagetext[3:findto].strip()
+           mapto = messagetext[findto+2:len(messagetext)].strip()
+           print(mapfrom)
+           print(mapto)
+           wb_obj1 = openpyxl.load_workbook(path + "mapped.xlsx")
+           sheet_obja = wb_obj1.active
+           n = 0
+           srow = 2
+           while n == 0:
+               cell_obj1a = sheet_obja.cell(row=srow, column=1)
+               cell_obj2a = sheet_obja.cell(row=srow, column=2)
+               if cell_obj1a.value ==None or cell_obj1a.value =="":
+                   cell_obj1a.value = mapfrom
+                   cell_obj2a.value = mapto
+                   wb_obj1.save(path + "mapped.xlsx")
+                   break
+               else:
+                srow=srow+1
+
 
        else:
            text = messagetext.upper()
