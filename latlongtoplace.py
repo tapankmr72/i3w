@@ -1,7 +1,3 @@
-import openpyxl
-path = ""
-wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
-sheet_obj = wb_obj.active
 srow=2
 n=0
 a=""
