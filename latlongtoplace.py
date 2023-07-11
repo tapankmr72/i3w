@@ -151,7 +151,7 @@ while n==0:
 
 #print(a)
 if a!="":
-    address = str4b+str7b+str4a+str7a + "." + (a.strip() + "." + b.strip() +  c.strip() + d.strip() + e.strip())
+    address = str4b+str7b+str4a+str7a + "." +"<b>"+(a.strip().upper()+"</b>"+ "." + b.strip() +  c.strip() + d.strip() + e.strip())
 else:
  address=""
 
