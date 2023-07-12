@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 import time
 from datetime import datetime
 import json
@@ -71,6 +71,7 @@ while looper==0:
            latid = tempstr.find("latitude")
            longid = tempstr.find("longitude")
            livepos = tempstr.find("live_period")
+           accuracypos=tempstr.find("horizontal_accuracy")
            latid = tempstr[latid + 11:longid-2]
            latid = latid.strip()
            latid=latid.strip(",")
@@ -80,13 +81,17 @@ while looper==0:
             longid = longid.rstrip(",")
 
            else:
-            findlastlondid=tempstr.find("}}}]}")
-            longid = tempstr[longid + 11:findlastlondid]
+
+            if accuracypos!=-1:
+                longid = tempstr[longid + 11:accuracypos-2]
+            else:
+               findlastlongid=tempstr.find("}}}]}")
+               longid = tempstr[longid + 11:findlastlongid]
 
             #longid = longid.rstrip("}")
             longid = longid.strip()
             longid = longid.rstrip(",")
-
+       print("latlong",latid,longid)
        filepos1 = tempstr.rfind("file_id':")
        if filepos1 != -1:
            filenamepos1 = tempstr.find("file_name':")
@@ -252,6 +257,11 @@ while looper==0:
                    cell_obj1a.value = mapfrom
                    cell_obj2a.value = mapto
                    wb_obj1.save(path + "mapped.xlsx")
+                   message = "Mapping done successfully"
+                   payloadtext = {"text": message, "parse_mode": "html",
+                                  "disable_web_page_preview": False,
+                                  "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+                   response = requests.post(texturl, json=payloadtext, headers=headers)
                    break
                else:
                 srow=srow+1
