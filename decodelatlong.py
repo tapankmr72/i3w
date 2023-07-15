@@ -1,28 +1,54 @@
-
-n = 0
-srow = 2
-while n == 0:
-    cell_obj1a = sheet_obja.cell(row=srow, column=1)
-    cell_obj2a = sheet_obja.cell(row=srow, column=2)
-    if cell_obj1a.value ==None or cell_obj1a.value =="":
-
-        break
-
-    if cell_obj2a.value.upper().strip() == text.upper().strip() :
-        text=cell_obj1a.value
-        strLen = len(text)
-        range_obj = range(strLen)
-        character = "."
-        count = 0
-        count1 = ""
-        for index in range_obj:
-            if text[index] == character:
-                count = count + 1
-                count1 = count1 + "<" + str(index)
-        break
-
-    else:
-      srow=srow+1
+import mysql.connector
+result=""
+dataBase = mysql.connector.connect(
+host ="srv680.hstgr.io",
+user ="u891522487_tapan",
+passwd ="upa86g@P",
+database = "u891522487_pythontest")
+print(dataBase.is_connected())
+cursorObject = dataBase.cursor()
+cursorObject.execute(f"SELECT i3w FROM mapped where myplace = %s", (text.lower(),))
+for data in cursorObject:
+        #print(data)
+        result = data[0]  # Question: is only one result possible? Or should this be a list?
+print(result)
+if result!="":
+  text=result
+strLen = len(text)
+range_obj = range(strLen)
+character = "."
+count = 0
+count1 = ""
+for index in range_obj:
+    if text[index] == character:
+          count = count + 1
+          count1 = count1 + "<" + str(index)
+#
+#
+# n = 0
+# srow = 2
+# while n == 0:
+#     cell_obj1a = sheet_obja.cell(row=srow, column=1)
+#     cell_obj2a = sheet_obja.cell(row=srow, column=2)
+#     if cell_obj1a.value ==None or cell_obj1a.value =="":
+#
+#         break
+#
+#     if cell_obj2a.value.upper().strip() == text.upper().strip() :
+#         text=cell_obj1a.value
+#         strLen = len(text)
+#         range_obj = range(strLen)
+#         character = "."
+#         count = 0
+#         count1 = ""
+#         for index in range_obj:
+#             if text[index] == character:
+#                 count = count + 1
+#                 count1 = count1 + "<" + str(index)
+#         break
+#
+#     else:
+#       srow=srow+1
 print("========================================")
 print("new file")
 print(text)
