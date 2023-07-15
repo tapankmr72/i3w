@@ -1,4 +1,4 @@
-import streamlit as st 
+import streamlit as st
 import time
 from datetime import datetime
 import json
@@ -11,6 +11,17 @@ sheet_obja = wb_obj1.active
 wb_obj = openpyxl.load_workbook(path+"latlong.xlsx")
 sheet_obj = wb_obj.active
 
+import mysql.connector
+
+dataBase = mysql.connector.connect(
+host ="srv680.hstgr.io",
+user ="u891522487_tapan",
+passwd ="upa86g@P",
+database = "u891522487_pythontest")
+
+cursorObject = dataBase.cursor()
+
+
 polltime=2
 pollgap=2
 u2=""
@@ -18,7 +29,7 @@ replyto="5560841599"
 looper=0
 message = ""
 updatetext1=0
-#token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
+token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
 headers = {"accept": "application/json","content-type": "application/json"}
 photourl="https://api.telegram.org/bot"+token+"/sendPhoto"
 docurl="https://api.telegram.org/bot"+token+"/sendDocument"
@@ -246,6 +257,35 @@ while looper==0:
            mapto = messagetext[findto+2:len(messagetext)].strip()
            print(mapfrom)
            print(mapto)
+           result = ""
+           dataBase = mysql.connector.connect(
+               host="srv680.hstgr.io",
+               user="u891522487_tapan",
+               passwd="upa86g@P",
+               database="u891522487_pythontest")
+           print(dataBase.is_connected())
+           cursorObject = dataBase.cursor()
+           cursorObject.execute(f"SELECT i3w FROM mapped where myplace = %s", (mapto.lower(),))
+           for data in cursorObject:
+               # print(data)
+               result = data[0]  # Question: is only one result possible? Or should this be a list?
+           print(result)
+           if result != "":
+               message = mapto+": is already mapped with address: "+ mapfrom
+               payloadtext = {"text": message, "parse_mode": "html",
+                              "disable_web_page_preview": False,
+                              "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+               response = requests.post(texturl, json=payloadtext, headers=headers)
+               break
+
+           #insertQuery = "INSERT INTO mapped (i3w) VALUES (mapfrom),(myplace) VALUES (mapto) ;"
+           sql = "INSERT INTO mapped (i3w, myplace) VALUES (%s, %s)"
+           val = (mapfrom, mapto)
+           cursorObject.execute(sql, val)
+           dataBase.commit()
+           print("No of Record Inserted :", cursorObject.rowcount)
+           # we can use the id to refer to that row later.
+           print("Inserted Id :", cursorObject.lastrowid)
            wb_obj1 = openpyxl.load_workbook(path + "mapped.xlsx")
            sheet_obja = wb_obj1.active
            n = 0
