@@ -273,7 +273,7 @@ while looper==0:
                result = data[0]  # Question: is only one result possible? Or should this be a list?
            print(result)
            if result != "":
-               message = mapto+": is already mapped with address: "+ mapfrom
+               message = mapto.lower()+": is already mapped with address: "+ mapfrom
                payloadtext = {"text": message, "parse_mode": "html",
                               "disable_web_page_preview": False,
                               "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
