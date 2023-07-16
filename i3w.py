@@ -257,6 +257,8 @@ while looper==0:
            mapto = messagetext[findto+2:len(messagetext)].strip()
            print(mapfrom)
            print(mapto)
+           mapfrom=mapfrom.replace(' ', '')
+           mapto = mapto.replace(' ', '')
            result = ""
            dataBase = mysql.connector.connect(
                host="srv680.hstgr.io",
@@ -280,7 +282,7 @@ while looper==0:
 
            #insertQuery = "INSERT INTO mapped (i3w) VALUES (mapfrom),(myplace) VALUES (mapto) ;"
            sql = "INSERT INTO mapped (i3w, myplace) VALUES (%s, %s)"
-           val = (mapfrom, mapto)
+           val = (mapfrom, mapto.lower())
            cursorObject.execute(sql, val)
            dataBase.commit()
            print("No of Record Inserted :", cursorObject.rowcount)
