@@ -29,7 +29,7 @@ replyto="5560841599"
 looper=0
 message = ""
 updatetext1=0
-#token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
+token="6277980563:AAEIvKjZkwvNNA_jhq_Ur_SQTJfJkgETTb4"
 headers = {"accept": "application/json","content-type": "application/json"}
 photourl="https://api.telegram.org/bot"+token+"/sendPhoto"
 docurl="https://api.telegram.org/bot"+token+"/sendDocument"
@@ -40,7 +40,7 @@ filedownload="https://api.telegram.org/file/bot"+token+"/"
 fileurl="https://api.telegram.org/bot"+token+"/getfile"
 healthduration=30
 #in minutes
-healthmessage="This is health message of Basic Telebot. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
+healthmessage="This is health message of I3w. It is running fine and you are receiving this message every"+ str(healthduration) +"  minutes "
 healthtime = int(time.time())
 
 while looper==0:
@@ -252,9 +252,56 @@ while looper==0:
                break
 
        elif messagetext[0:3].upper()=="MAP":
-           findto=messagetext.upper().find("TO")
+           findto=messagetext.upper().find("-")
+           if findto==-1:
+               message = "Mapping command is not in proper format Addresses must be separated by (-) Example MAP CG51.NCR.3QN2VU - kohat.delhi.india"
+               payloadtext = {"text": message, "parse_mode": "html",
+                              "disable_web_page_preview": False,
+                              "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+               response = requests.post(texturl, json=payloadtext, headers=headers)
+               break
            mapfrom=messagetext[3:findto].strip()
-           mapto = messagetext[findto+2:len(messagetext)].strip()
+           mapto = messagetext[findto+1:len(messagetext)].strip()
+           mapfrom = mapfrom.replace(' ', '')
+           mapto = mapto.replace(' ', '')
+           findmapto = mapto.upper().find("-")
+           if findmapto!=-1:
+               message = "Your Chosen Address cannot conatain special character (-). Please check and send valid address"
+               payloadtext = {"text": message, "parse_mode": "html",
+                              "disable_web_page_preview": False,
+                              "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+               response = requests.post(texturl, json=payloadtext, headers=headers)
+               break
+           text = mapto.upper()
+           strLen = len(text)
+           range_obj = range(strLen)
+           character = "."
+           count = 0
+           for index in range_obj:
+               if text[index] == character:
+                   count = count + 1
+
+
+           print(count)
+           if count != 2:
+               print("not proper string")
+               message = "Your Given address is not in proper format. Address must contain three words with dots(.) in between them. Address must also not contain  special character(-)"
+               payloadtext = {"text": message, "parse_mode": "html",
+                              "disable_web_page_preview": False,
+                              "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+               response = requests.post(texturl, json=payloadtext, headers=headers)
+               break
+           text=mapfrom.upper()
+           with open("decodelatlong.py") as f:
+               exec(f.read())
+               if message[0:4]!="http":
+                   message="Address to be mapped is either not in India or does not represent a Geolocation. Please check and send proper address"
+                   payloadtext = {"text":message, "parse_mode": "html",
+                              "disable_web_page_preview": False,
+                              "disable_notification": False, "reply_to_message_id": None, "chat_id": numbertext}
+                   response = requests.post(texturl, json=payloadtext, headers=headers)
+                   break
+
            print(mapfrom)
            print(mapto)
            mapfrom=mapfrom.replace(' ', '')
@@ -270,7 +317,7 @@ while looper==0:
            cursorObject.execute(f"SELECT i3w FROM mapped where myplace = %s", (mapto.lower(),))
            for data in cursorObject:
                # print(data)
-               result = data[0]  # Question: is only one result possible? Or should this be a list?
+               result = data[0]
            print(result)
            if result != "":
                message = mapto.lower()+": is already mapped with address: "+ mapfrom
@@ -282,7 +329,7 @@ while looper==0:
 
            #insertQuery = "INSERT INTO mapped (i3w) VALUES (mapfrom),(myplace) VALUES (mapto) ;"
            sql = "INSERT INTO mapped (i3w, myplace) VALUES (%s, %s)"
-           val = (mapfrom, mapto.lower())
+           val = (mapfrom.upper(), mapto.lower())
            cursorObject.execute(sql, val)
            dataBase.commit()
            print("No of Record Inserted :", cursorObject.rowcount)
