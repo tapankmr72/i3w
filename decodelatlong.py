@@ -1,3 +1,4 @@
+text= text.replace(' ', '')
 import mysql.connector
 result=""
 dataBase = mysql.connector.connect(
